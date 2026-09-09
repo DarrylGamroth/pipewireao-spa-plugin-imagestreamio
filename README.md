@@ -1,26 +1,37 @@
-# pipewireao-spa-plugin-imagestreamio
+# PipeWireAO ImageStreamIO plugin
 
-Standalone source and Debian/Ubuntu packaging for the `imagestreamio` PipeWireAO SPA component.
+This repository provides `api.imagestreamio.source` and
+`api.imagestreamio.sink`, which bridge PipeWireAO ndarray buffers to milk
+ImageStreamIO shared-memory streams. Include it only in deployments that
+exchange data through ImageStreamIO.
 
-This repository was split from
-[`pipewireao-spa-plugins`](https://github.com/DarrylGamroth/pipewireao-spa-plugins)
-at commit `8d2edcf`. The common public headers continue to be released
-as the `pipewireao-spa-plugins-dev` binary package from the core repository.
+The repository is an independent build unit. It depends on PipeWireAO, the
+public headers installed by
+[`pipewireao-spa-plugins-core`](https://github.com/DarrylGamroth/pipewireao-spa-plugins-core),
+and ImageStreamIO.
 
-## Package build
-
-Supply the PipeWireAO build dependency through `APT_BUILD_PACKAGES` and its
-runtime package expression through `HOST_DEPENDENCY`:
+## Build and stage
 
 ```console
-export APT_BUILD_PACKAGES='pipewire-ao-dev pipewireao-spa-plugins-dev'
-export HOST_DEPENDENCY='pipewire-ao (>= 1.7)'
-export MAINTAINER='Deployment Team <packages@example.org>'
-docker buildx bake debian-13-package
-docker buildx bake ubuntu-26-04-package
+meson setup build --prefix=/usr \
+  -Dimagestreamio=enabled \
+  -Dimagestreamio-prefix=/opt/ImageStreamIO
+meson compile -C build
+meson test -C build 'spa-imagestreamio*' --print-errorlogs
+DESTDIR="$PWD/stage" meson install -C build
 ```
 
-Vendor repositories also require the SDK development package in
-`APT_BUILD_PACKAGES` and the corresponding runtime package in
-`EXTRA_DEPENDS_JSON`. Private APT sources and credentials are passed with the
-BuildKit secrets `apt_sources`, `apt_auth`, and `apt_keyring`.
+The default ImageStreamIO prefix is `/usr/local`. See
+[`spa/plugins/imagestreamio/README.md`](spa/plugins/imagestreamio/README.md) for
+the array mapping, shared-memory ownership, and factory properties.
+
+## Container and package recipes
+
+The Docker Bake file offers `debian-13-deploy` and `ubuntu-26-04-deploy` image
+targets. `debian-13-package` and `ubuntu-26-04-package` export `.deb` files when
+that deployment format is wanted. The supplied image recipes use the package
+artifact internally; Meson builds are not restricted to Debian or Ubuntu.
+
+The container build must be given authorized sources for PipeWireAO, the core
+development files, and ImageStreamIO through its build arguments or BuildKit
+secrets.

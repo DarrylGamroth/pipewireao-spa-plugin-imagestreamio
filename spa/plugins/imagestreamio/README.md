@@ -10,8 +10,7 @@ It exports two ordinary SPA factories:
 
 ImageStreamIO remains the authority for its file layout, version checks,
 metadata, semaphores, and stream counters. The plugin does not reimplement or
-vendor that ABI. The checked-out upstream library uses the MIT License, which
-is compatible with this repository.
+vendor that ABI. ImageStreamIO uses the MIT License.
 
 ## Build
 
