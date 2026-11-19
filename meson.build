@@ -16,7 +16,7 @@ fs = import('fs')
 add_project_arguments('-D_GNU_SOURCE', language: 'c')
 
 spa_pkg_dep = dependency('libspa-ao-0.2', version: '>= 0.2')
-pipewire_pkg_dep = dependency('libpipewire-ao-0.3', version: '>= 1.7')
+pipewire_pkg_dep = dependency('libpipewire-ao-0.3', version: '>= 4.0.2')
 plugin_api_dependencies = []
 if fs.is_dir('include/pipewireao-plugins')
   plugin_include = include_directories('include')
@@ -69,13 +69,7 @@ if fs.is_dir('include/pipewireao-plugins')
 endif
 
 if get_option('tests').allowed()
-  image_frame_test = executable(
-    'spa-image-frame-test',
-    'spa/plugins/test-image-frame.c',
-    dependencies: spa_dep,
-  )
-  test('spa-image-frame', image_frame_test)
-
+  subdir('tests')
 endif
 
 foreach component_dir : [

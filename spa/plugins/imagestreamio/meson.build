@@ -14,7 +14,7 @@ imagestreamio_lib = shared_library(
 if get_option('tests').allowed()
   imagestreamio_factory_test = executable(
     'spa-imagestreamio-factory-test',
-    'test-factory.c',
+    '../../../tests/imagestreamio/test-factory.c',
     dependencies: [spa_dep, dl_dep],
     include_directories: plugin_include,
   )
@@ -27,14 +27,14 @@ if get_option('tests').allowed()
 
   imagestreamio_stream_test = executable(
     'spa-imagestreamio-stream-test',
-    ['test-stream.c', 'stream.c'],
+    ['../../../tests/imagestreamio/test-stream.c', 'stream.c'],
     dependencies: [spa_dep, imagestreamio_dep],
   )
   test('spa-imagestreamio-stream', imagestreamio_stream_test)
 
   imagestreamio_node_test = executable(
     'spa-imagestreamio-node-test',
-    'test-node.c',
+    '../../../tests/imagestreamio/test-node.c',
     dependencies: [spa_dep, dl_dep, imagestreamio_dep],
     include_directories: plugin_include,
   )

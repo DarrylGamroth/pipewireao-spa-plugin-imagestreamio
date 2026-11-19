@@ -41,7 +41,7 @@ secrets.
 
 ## CI and coverage
 
-GitHub Actions builds and tests against PipeWireAO 1.7.3 on Debian 13.
+GitHub Actions builds and tests against PipeWireAO 4.0.5 on Debian 13.
 The SPA factory, shared-memory stream, and source/sink tests with a local
 ImageStreamIO installation.
 
